@@ -147,7 +147,7 @@ export default function Home() {
 
                 <div className="project-card">
                     <div className="project-image">
-                        <img src="/Images/project2.jpg" alt="OCR App Project" />
+                        <img src="/Images/project2.JPG" alt="OCR App Project" />
                     </div>
                     <div className="project-info">
                         <h3>OCR App</h3>
