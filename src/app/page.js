@@ -6,6 +6,9 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formStatus, setFormStatus] = useState({ type: '', message: '' });
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -13,6 +16,38 @@ export default function Home() {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setFormStatus({ type: '', message: '' });
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setFormStatus({ type: 'success', message: 'Message sent successfully! I\'ll get back to you soon.' });
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setFormStatus({ type: 'error', message: data.error || 'Failed to send message. Please try again.' });
+      }
+    } catch (error) {
+      setFormStatus({ type: 'error', message: 'Network error. Please check your connection and try again.' });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -193,17 +228,45 @@ export default function Home() {
             <p className="contact-subtitle">I'm always interested in hearing about new projects and opportunities.</p>
             
             <div className="contact-content">
-                <form className="contact-form">
+                <form className="contact-form" onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <input type="text" placeholder="Your Name" required />
+                        <input 
+                          type="text" 
+                          name="name"
+                          placeholder="Your Name" 
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          required 
+                        />
                     </div>
                     <div className="form-group">
-                        <input type="email" placeholder="Your Email" required />
+                        <input 
+                          type="email" 
+                          name="email"
+                          placeholder="Your Email" 
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          required 
+                        />
                     </div>
                     <div className="form-group">
-                        <textarea placeholder="Your Message" rows="5" required></textarea>
+                        <textarea 
+                          name="message"
+                          placeholder="Your Message" 
+                          rows="5" 
+                          value={formData.message}
+                          onChange={handleInputChange}
+                          required
+                        ></textarea>
                     </div>
-                    <button type="submit" className="btn btn-primary">Send Message</button>
+                    <button type="submit" className="btn btn-primary" disabled={isLoading}>
+                      {isLoading ? 'Sending...' : 'Send Message'}
+                    </button>
+                    {formStatus.message && (
+                      <div className={`form-status form-status-${formStatus.type}`}>
+                        {formStatus.message}
+                      </div>
+                    )}
                 </form>
 
                 <div className="contact-info">
