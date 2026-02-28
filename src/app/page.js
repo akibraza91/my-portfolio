@@ -161,25 +161,7 @@ export default function Home() {
         <div className="container">
             <h2 className="section-title">Featured Projects</h2>
             <div className="projects-grid">
-                <div className="project-card">
-                    <div className="project-image">
-                        <img src="/Images/project1.jpg" alt="IP Address Tracker Project" />
-                    </div>
-                    <div className="project-info">
-                        <h3>IP Address Tracker</h3>
-                        <p className="project-description">Get info and giolocation of a IP Address.</p>
-                        <div className="project-tags">
-                            <span className="tag">React</span>
-                            <span className="tag">API's</span>
-                            <span className="tag">Next.js</span>
-                        </div>
-                        <div className="project-links">
-                            <a href="https://akibraza91.github.io/ip-address-tracker/" className="project-link">Live Demo</a>
-                            <a href="https://github.com/akibraza91/ip-address-tracker" className="project-link">GitHub</a>
-                        </div>
-                    </div>
-                </div>
-
+                
                 <div className="project-card">
                     <div className="project-image">
                         <img src="/Images/project2.JPG" alt="OCR App Project" />
@@ -195,6 +177,44 @@ export default function Home() {
                         <div className="project-links">
                             <a href="https://ocr-app-ten.vercel.app/" className="project-link">Live Demo</a>
                             <a href="https://github.com/akibraza91/ocr-app" className="project-link">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="project-card">
+                    <div className="project-image">
+                        <img src="/Images/project4.png" alt="SOP Generator" />
+                    </div>
+                    <div className="project-info">
+                        <h3>SOP Generator</h3>
+                        <p className="project-description">A statement of purpose use to apply student visa for Canada.</p>
+                        <div className="project-tags">
+                            <span className="tag">NodeJS</span>
+                            <span className="tag">Express</span>
+                            <span className="tag">MongoDB</span>
+                        </div>
+                        <div className="project-links">
+                            <a href="https://sop-generator-gold.vercel.app/" className="project-link">Live Demo</a>
+                            <a href="https://github.com/akibraza91/sop-generator" className="project-link">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="project-card">
+                    <div className="project-image">
+                        <img src="/Images/project1.jpg" alt="IP Address Tracker Project" />
+                    </div>
+                    <div className="project-info">
+                        <h3>IP Address Tracker</h3>
+                        <p className="project-description">Get info and giolocation of a IP Address.</p>
+                        <div className="project-tags">
+                            <span className="tag">React</span>
+                            <span className="tag">API's</span>
+                            <span className="tag">Next.js</span>
+                        </div>
+                        <div className="project-links">
+                            <a href="https://akibraza91.github.io/ip-address-tracker/" className="project-link">Live Demo</a>
+                            <a href="https://github.com/akibraza91/ip-address-tracker" className="project-link">GitHub</a>
                         </div>
                     </div>
                 </div>

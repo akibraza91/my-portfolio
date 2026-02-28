@@ -1,15 +1,23 @@
 import nodemailer from 'nodemailer';
 
-// Configure your email service here
-// For Gmail: https://myaccount.google.com/apppasswords
-// For other services, get SMTP credentials from your provider
-
+// Configure nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE || 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
   },
+});
+
+// Verify connection on startup
+transporter.verify((error, success) => {
+  if (error) {
+    console.error('Email transporter error:', error);
+  } else {
+    console.log('Email transporter ready:', success);
+  }
 });
 
 export async function POST(req) {
@@ -33,8 +41,17 @@ export async function POST(req) {
       );
     }
 
+    // Verify environment variables are set
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      console.error('Missing email credentials');
+      return new Response(
+        JSON.stringify({ error: 'Email service not configured' }),
+        { status: 500 }
+      );
+    }
+
     // Send email to your address
-    await transporter.sendMail({
+    const adminMailOptions = {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
       subject: `New Contact Form Submission from ${name}`,
@@ -46,20 +63,28 @@ export async function POST(req) {
         <p>${message.replace(/\n/g, '<br>')}</p>
       `,
       replyTo: email,
-    });
+    };
+
+    console.log('Sending admin email...');
+    await transporter.sendMail(adminMailOptions);
+    console.log('Admin email sent successfully');
 
     // Send confirmation email to the user
-    await transporter.sendMail({
+    const userMailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: 'Thank you for contacting me',
+      subject: 'Thank you for contacting me - Akib Portfolio',
       html: `
         <h2>Thank You!</h2>
         <p>Hi ${name},</p>
         <p>I received your message and will get back to you as soon as possible.</p>
         <p>Best regards,<br>Akib</p>
       `,
-    });
+    };
+
+    console.log('Sending user confirmation email...');
+    await transporter.sendMail(userMailOptions);
+    console.log('User confirmation email sent successfully');
 
     return new Response(
       JSON.stringify({ 
@@ -69,10 +94,18 @@ export async function POST(req) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Email error:', error);
+    console.error('Detailed email error:', {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response,
+      responseCode: error.responseCode,
+      stack: error.stack
+    });
+    
     return new Response(
       JSON.stringify({ 
-        error: 'Failed to send email. Please try again later.' 
+        error: `Failed to send email: ${error.message}` 
       }),
       { status: 500 }
     );
